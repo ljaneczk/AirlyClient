@@ -53,7 +53,5 @@ public class Sensor {
         this.pollutionLevel = pollutionLevel;
     }
 
-    public void setVendor(String vendor) {
-        this.vendor = vendor;
-    }
+    public void setVendor(String vendor) { this.vendor = vendor; }
 }

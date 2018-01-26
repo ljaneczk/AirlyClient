@@ -74,7 +74,7 @@ public class ArgumentsParser {
             throw new Exception("Second coordinate (latitude) is not a double number.");
         longitude = Double.parseDouble(inputArguments[index+1]);
         latitude  = Double.parseDouble(inputArguments[index+2]);
-        if(! (longitude > 14.125 && longitude < 23.940 && latitude < 54.804 && latitude > 49.178))
+        if(! (longitude >= 14.125 && longitude <= 23.940 && latitude >= 49.178 && latitude <= 54.804))
             throw new Exception("Coordinates out of Poland are not expected to be proceeded correctly.");
     }
 

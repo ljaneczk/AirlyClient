@@ -1,7 +1,5 @@
 package main;
 
-//import org.apache.http.client.HttpResponseException
-
 public class AirlyProceeder  {
     private ModeType type = null;
     private String apikey = null;
@@ -16,7 +14,6 @@ public class AirlyProceeder  {
         this.type = type;
     }
 
-    //apikey, sensorid, mode
     public AirlyProceeder(String apikey, String sensor_id, ModeType type) {
         this.apikey = apikey;
         this.sensor_id = sensor_id;
@@ -24,33 +21,58 @@ public class AirlyProceeder  {
     }
 
     public void executeRequest() throws Exception {
-        if (type == ModeType.sensor) {
+        if (type == ModeType.sensor)
             launchSensorRequest();
-        }
-        else {
+        else
             launchMeasurementRequest();
-        }
     }
 
     private void launchSensorRequest() throws Exception {
         AirlyRequest request = new AirlyRequest(apikey, sensor_id);
         String dataJson = request.runRequest();
-        DetailedMeasurement measurement = new GsonManager(dataJson).convertMeasurement();
+        DetailedMeasurement detailedMeasurement = new GsonManager(dataJson).convertMeasurement();
 
         AirlyRequest infoRequest = new AirlyRequest(apikey,sensor_id,ModeType.sensor);
         String infoJson = infoRequest.runRequest();
         Sensor sensor = new GsonManager(infoJson).convertSensor();
 
-        System.out.println("Found sensor="+sensor_id+"and key="+apikey+" "+type);
-        //Parse arguments and show data
+        checkIfDataWasProvided(detailedMeasurement);
+
+        Displayer displayer = new Displayer(detailedMeasurement,sensor,type);
+        displayer.printCurrentResponse();
+        displayer.printSensorResponse();
     }
 
     private void launchMeasurementRequest() throws Exception {
-        AirlyRequest request = new AirlyRequest(apikey, longitude, latitude, "200");
+        AirlyRequest request = new AirlyRequest(apikey, longitude, latitude, "1000");
         String dataJson = request.runRequest();
-        DetailedMeasurement measurement = new GsonManager(dataJson).convertMeasurement();
+        DetailedMeasurement detailedMeasurement = new GsonManager(dataJson).convertMeasurement();
 
-        System.out.println("Found coord="+longitude+" "+latitude+" and key="+apikey+" "+type);
-        //Parse arguments and show data
+        checkIfDataWasProvided(detailedMeasurement);
+
+        Displayer displayer = new Displayer(detailedMeasurement,type);
+        if (type == ModeType.current)
+            displayer.printCurrentResponse();
+        if (type == ModeType.history)
+            displayer.printHistoryResponse();
+    }
+
+    public void checkIfDataWasProvided(DetailedMeasurement detailedMeasurement) throws Exception {
+        Measurement measurement = detailedMeasurement.getCurrentMeasurement();
+        if(measurement.getAirQualityIndex() != null)
+            return;
+        if(measurement.getHumidity() != null)
+            return;
+        if(measurement.getMeasurementTime() != null)
+            return;
+        if(measurement.getPm1() != null)
+            return;
+        if(measurement.getPm10() != null)
+            return;
+        if(measurement.getPm25() != null)
+            return;
+        if(measurement.getPollutionLevel() != null)
+            return;
+        throw new Exception("Data was not provided. Check your localization parameters (longitude from <14.125,23.940> and latitude from <49.178,54.804>.");
     }
 }

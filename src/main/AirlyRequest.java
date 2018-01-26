@@ -30,7 +30,6 @@ public class AirlyRequest {
     }
 
     public String runRequest() throws Exception {
-        System.out.println("query: "+query);
         URLConnection urlConnection = new URL(query).openConnection();
         urlConnection.setDoInput(true);
 
@@ -45,7 +44,6 @@ public class AirlyRequest {
         }
         while (line != null);
 
-        System.out.println("Json: "+json);
         return json;
     }
 

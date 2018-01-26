@@ -13,7 +13,6 @@ public class GsonManager {
     public DetailedMeasurement convertMeasurement() throws Exception {
         Gson gson = new GsonBuilder().create();
         DetailedMeasurement measurement = gson.fromJson(input,DetailedMeasurement.class);
-        System.out.println(measurement);
         return measurement;
     }
 

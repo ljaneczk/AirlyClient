@@ -9,9 +9,7 @@ public class Address {
 
     public String getCountry() { return country; }
 
-    public String getLocality() {
-        return locality;
-    }
+    public String getLocality() { return locality; }
 
     public String getRoute() {
         return route;
